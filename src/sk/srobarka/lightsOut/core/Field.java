@@ -1,9 +1,11 @@
 package sk.srobarka.lightsOut.core;
 
+import java.util.Random;
+
 public class Field {
-    private int rowCount;
-    private int columnCount;
-    private Light[][] lights;
+    final private int rowCount;
+    final private int columnCount;
+    final private Light[][] lights;
 
     public Field(int rowCount, int columnCount, int difficulty) {
         this.rowCount = rowCount;
@@ -27,14 +29,32 @@ public class Field {
     }
 
     private void shuffle(int moves) {
+        Random random = new Random();
         for (int i = 0; i < moves; i++) {
-            int row = (int) (Math.random() * this.rowCount);
-            int column = (int) (Math.random() * this.columnCount);
-            this.click(row, column);
+            int row = random.nextInt(this.rowCount);
+            int column = random.nextInt(this.columnCount);
+            this.toggleLights(row, column);
         }
     }
 
-    public void click(int row, int column) {
+    public void toggleLights(int row, int column) {
+        this.lights[row][column].toggle();
+        if (row > 0) {
+            this.lights[row - 1][column].toggle();
+        }
+        if (row < this.rowCount - 1) {
+            this.lights[row + 1][column].toggle();
+        }
+        if (column > 0) {
+            this.lights[row][column - 1].toggle();
+        }
+        if (column < this.columnCount - 1) {
+            this.lights[row][column + 1].toggle();
+        }
+    }
+
+    // --- START --- my solution
+    public void customToggleLights(int row, int column) {
         this.toggleLight(row, column);
         this.toggleLight(row, column - 1);
         this.toggleLight(row, column + 1);
@@ -45,6 +65,15 @@ public class Field {
     private void toggleLight(int row, int column) {
         if (row < 0 || row >= this.rowCount || column < 0 || column >= this.columnCount) return;
         this.lights[row][column].toggle();
+    }
+    // --- END --- my solution
+
+    public int getRowCount() {
+        return this.rowCount;
+    }
+
+    public int getColumnCount() {
+        return this.columnCount;
     }
 
     public boolean getLight(int row, int column) {
