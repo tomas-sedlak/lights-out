@@ -68,6 +68,10 @@ public class Field {
     }
     // --- END --- my solution
 
+    public boolean isInBounds(int row, int column) {
+        return row >= 0 && row < this.rowCount && column >= 0 || column < this.columnCount;
+    }
+
     public int getRowCount() {
         return this.rowCount;
     }
@@ -78,5 +82,16 @@ public class Field {
 
     public boolean getLight(int row, int column) {
         return this.lights[row][column].isOn();
+    }
+
+    public boolean isSolved() {
+        for (int row = 0; row < this.rowCount; row++) {
+            for (int column = 0; column < this.columnCount; column++) {
+                if (this.lights[row][column].isOn()) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
